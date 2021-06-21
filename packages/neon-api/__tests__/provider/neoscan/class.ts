@@ -76,3 +76,16 @@ test("getTransaction", async () => {
   await obj.getTransaction(expectedTxid);
   expect(core.getTransaction).toBeCalledWith(expectedUrl, expectedTxid);
 });
+
+test("getAddressAbstracts", async () => {
+  const expectedUrl = "www.test.com";
+  const expectedAddress = "address";
+  const expectedPage = 1;
+  const obj = new neoscan(expectedUrl);
+  await obj.getAddressAbstracts(expectedAddress, expectedPage);
+  expect(core.getAddressAbstracts).toBeCalledWith(
+    expectedUrl,
+    expectedAddress,
+    expectedPage
+  );
+});

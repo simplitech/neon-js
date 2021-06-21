@@ -1,4 +1,5 @@
 import { ITransaction, Vin, Vout } from "../common";
+import { IAddressAbstract } from "../common";
 export interface NeoscanV1GetBalanceResponse {
   balance: NeoscanBalance[] | null;
   address: string;
@@ -100,3 +101,5 @@ export interface NeoscanPastTx {
   block_hash: string;
   asset: null;
 }
+
+export type NeoscanAddressAbstracts = IAddressAbstract

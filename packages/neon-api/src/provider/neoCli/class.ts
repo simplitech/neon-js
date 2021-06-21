@@ -1,5 +1,5 @@
 import { logging, rpc, u, wallet } from "@cityofzion/neon-core";
-import { ITransaction, PastTransaction, Provider } from "../common";
+import { ITransaction, PastTransaction, Provider, IAddressAbstract } from "../common";
 import { getBalance, getClaims, getMaxClaimAmount } from "./core";
 
 const log = logging.default("api");
@@ -36,6 +36,13 @@ export class NeoCli implements Provider {
     throw new Error("Method not implemented.");
   }
   public getTransaction(_txid: string): Promise<ITransaction> {
+    throw new Error("Method not implemented.");
+  }
+  
+  public getAddressAbstracts(
+    _address: string,
+    _page: number
+  ): Promise<IAddressAbstract> {
     throw new Error("Method not implemented.");
   }
 }

@@ -9,7 +9,10 @@ import {
   RpcNode,
   Vin,
   Vout,
+  IAddressAbstract,
+  Entry,
 } from "../common";
+import { DoraAddressAbstracts, TEntry } from "../dora/responses";
 import { transformBalance, transformClaims } from "../neoCli/transform";
 import {
   DoraGetBalanceResponse,
@@ -120,4 +123,22 @@ export async function getTransaction(
   const response = await axios.get(`${url}/transaction/${txid}`);
   const data = response.data as DoraTransaction;
   return parseTransaction(data);
+}
+
+function parseEntries(entries: TEntry[]): Entry[] {
+  return entries.map((it) => {
+    return { ...it, amount: String(it.amount) };
+  });
+}
+
+export async function getAddressAbstracts(
+  url: string,
+  address: string,
+  page: number
+): Promise<IAddressAbstract> {
+  const response = await axios.get(
+    `${url}/get_address_abstracts/${address}/${page}`
+  );
+  const data = response.data as DoraAddressAbstracts;
+  return { ...data, entries: parseEntries(data.entries) };
 }

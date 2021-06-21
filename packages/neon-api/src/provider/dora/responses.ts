@@ -1,5 +1,6 @@
 import { ITransaction, Vin, Vout } from "../common";
 import { NeoCliBalance, NeoCliClaimable } from "../neoCli/responses";
+import { IAddressAbstract, Entry } from "../common";
 export interface DoraGetBalanceResponse {
   balance: NeoCliBalance[];
   address: string;
@@ -28,4 +29,11 @@ export interface DoraTransaction
   vin: Required<Pick<Vin, "txid" | "vout">>[];
   vout: Required<Omit<Vout, "address_hash" | "txid">>[];
   block: number;
+}
+
+export type TEntry = Omit<Entry, "amount"> & { amount: number };
+
+export interface DoraAddressAbstracts
+  extends Omit<IAddressAbstract, "entries"> {
+  entries: TEntry[];
 }

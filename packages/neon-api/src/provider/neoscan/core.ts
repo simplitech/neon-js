@@ -10,8 +10,10 @@ import {
   RpcNode,
   Vin,
   Vout,
+  IAddressAbstract,
 } from "../common";
 import {
+  NeoscanAddressAbstracts,
   NeoscanBalance,
   NeoscanClaim,
   NeoscanPastTx,
@@ -253,4 +255,16 @@ export async function getTransaction(
   const response = await axios.get(url + "/v1/get_transaction/" + txid);
   const data = response.data as NeoscanTransaction;
   return parseTransaction(data);
+}
+
+export async function getAddressAbstracts(
+  url: string,
+  address: string,
+  page: number
+): Promise<IAddressAbstract> {
+  const response = await axios.get(
+    `${url}/v1/get_address_abstracts/${address}/${page}`
+  );
+  const data = response.data as NeoscanAddressAbstracts;
+  return data;
 }

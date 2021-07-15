@@ -7,19 +7,17 @@ import {
   getBestUrl,
   PastTransaction,
   RpcNode,
-  AddressAbstract,
 } from "../common";
+import { AddressAbstracts, Entry } from "../dora/interface";
+import { EntryString, NeoscanBalance, NeoscanClaim, NeoscanPastTx, NeoscanTx } from "./interface";
 import {
-  NeoscanAddressAbstracts,
-  NeoscanBalance,
-  NeoscanClaim,
-  NeoscanPastTx,
-  NeoscanTx,
+  NeoscanGetAddressAbstractsResponse,
   NeoscanV1GetBalanceResponse,
   NeoscanV1GetClaimableResponse,
   NeoscanV1GetHeightResponse,
   NeoscanV1GetUnclaimedResponse,
 } from "./responses";
+
 const log = logging.default("api");
 
 function parseUnspent(unspentArr: NeoscanTx[]): wallet.CoinLike[] {
@@ -31,6 +29,7 @@ function parseUnspent(unspentArr: NeoscanTx[]): wallet.CoinLike[] {
     };
   });
 }
+
 function parseClaims(claimArr: NeoscanClaim[]): wallet.ClaimItemLike[] {
   return claimArr.map((c) => {
     return {
@@ -41,6 +40,12 @@ function parseClaims(claimArr: NeoscanClaim[]): wallet.ClaimItemLike[] {
       txid: c.txid,
       value: c.value,
     };
+  });
+}
+
+function parseEntries(entries: EntryString[]): Entry[] {
+  return entries.map((it) => {
+    return { ...it, amount: Number(it.amount) };
   });
 }
 
@@ -206,10 +211,13 @@ export async function getAddressAbstracts(
   url: string,
   address: string,
   page: number
-): Promise<AddressAbstract> {
+): Promise<AddressAbstracts> {
   const response = await axios.get(
     `${url}/v1/get_address_abstracts/${address}/${page}`
   );
-  const data = response.data as NeoscanAddressAbstracts;
-  return data;
+  const data = response.data as NeoscanGetAddressAbstractsResponse;
+  if (data.entries.length == 0) {
+    throw new Error("Empty Response. Address may not exist");
+  }
+  return { ...data, entries: parseEntries(data.entries) };
 }

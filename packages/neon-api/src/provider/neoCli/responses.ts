@@ -14,6 +14,7 @@ export interface NeoCliBalance {
   asset_symbol: string;
   amount: number;
 }
+
 export interface NeoCliTx {
   txid: string;
   value: number;

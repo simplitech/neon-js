@@ -1,5 +1,5 @@
 import { logging, settings, u, wallet } from "@cityofzion/neon-core";
-import { AddressAbstract, PastTransaction, Provider } from "../common";
+import { PastTransaction, Provider } from "../common";
 import {
   getBalance,
   getClaims,
@@ -8,6 +8,7 @@ import {
   getRPCEndpoint,
   getAddressAbstracts,
 } from "./core";
+import { AddressAbstracts } from "./interface";
 
 const log = logging.default("api");
 
@@ -15,7 +16,7 @@ interface DoraProvider extends Provider {
   getAddressAbstracts: (
     address: string,
     page: number
-  ) => Promise<AddressAbstract>;
+  ) => Promise<AddressAbstracts>;
 }
 
 export class Dora implements DoraProvider {
@@ -41,24 +42,29 @@ export class Dora implements DoraProvider {
   public getBalance(address: string): Promise<wallet.Balance> {
     return getBalance(this.url, address);
   }
+
   public getClaims(address: string): Promise<wallet.Claims> {
     return getClaims(this.url, address);
   }
+
   public getMaxClaimAmount(address: string): Promise<u.Fixed8> {
     return getMaxClaimAmount(this.url, address);
   }
+
   public getHeight(): Promise<number> {
     return getHeight(this.url);
   }
+
   public async getTransactionHistory(
     _address: string
   ): Promise<PastTransaction[]> {
     throw new Error("Method not implemented.");
   }
+
   public getAddressAbstracts(
     address: string,
     page: number
-  ): Promise<AddressAbstract> {
+  ): Promise<AddressAbstracts> {
     return getAddressAbstracts(this.url, address, page);
   }
 }

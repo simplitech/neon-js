@@ -5,17 +5,16 @@ import {
   filterHttpsOnly,
   findGoodNodesFromHeight,
   getBestUrl,
-  AddressAbstract,
   RpcNode,
-  Entry,
 } from "../common";
-import { DoraAddressAbstracts, TEntry } from "../dora/responses";
 import { transformBalance, transformClaims } from "../neoCli/transform";
 import {
   DoraGetBalanceResponse,
   DoraGetClaimableResponse,
   DoraGetUnclaimedResponse,
+  DoraGetAddressAbstractsResponse,
 } from "./responses";
+import { AddressAbstracts } from "./interface";
 
 export async function getRPCEndpoint(url: string): Promise<string> {
   const response = await axios.get(`${url}/get_all_nodes`);
@@ -37,7 +36,6 @@ export async function getBalance(
   if (!data.address) {
     throw new Error("No response. Address might be malformed.");
   }
-
   return transformBalance({ net: url, address, balance: data.balance });
 }
 
@@ -50,7 +48,6 @@ export async function getClaims(
   if (!data.address) {
     throw new Error("No response. Address might be malformed.");
   }
-
   return transformClaims({ net: url, address, claims: data.claimable });
 }
 
@@ -68,24 +65,20 @@ export async function getMaxClaimAmount(
   if (data.unclaimed === undefined) {
     throw new Error("No response. Address might be malformed.");
   }
-
   return new u.Fixed8(data.unclaimed);
-}
-
-function parseEntries(entries: TEntry[]): Entry[] {
-  return entries.map((it) => {
-    return { ...it, amount: String(it.amount) };
-  });
 }
 
 export async function getAddressAbstracts(
   url: string,
   address: string,
   page: number
-): Promise<AddressAbstract> {
+): Promise<AddressAbstracts> {
   const response = await axios.get(
     `${url}/get_address_abstracts/${address}/${page}`
   );
-  const data = response.data as DoraAddressAbstracts;
-  return { ...data, entries: parseEntries(data.entries) };
+  const data = response.data as DoraGetAddressAbstractsResponse;
+  if (Object.keys(data).length == 0) {
+    throw new Error("Empty Response. Address may not exist");
+  }
+  return data as AddressAbstracts;
 }

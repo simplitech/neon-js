@@ -1,5 +1,6 @@
 import { logging, rpc, settings, u, wallet } from "@cityofzion/neon-core";
-import { AddressAbstract, PastTransaction, Provider } from "../common";
+import { PastTransaction, Provider } from "../common";
+import { AddressAbstracts } from "../dora/interface";
 import {
   getBalance,
   getClaims,
@@ -15,7 +16,7 @@ interface NeoscanProvider extends Provider {
   getAddressAbstracts: (
     address: string,
     page: number
-  ) => Promise<AddressAbstract>;
+  ) => Promise<AddressAbstracts>;
 }
 
 export class Neoscan implements NeoscanProvider {
@@ -53,22 +54,27 @@ export class Neoscan implements NeoscanProvider {
   public getBalance(address: string): Promise<wallet.Balance> {
     return getBalance(this.url, address);
   }
+
   public getClaims(address: string): Promise<wallet.Claims> {
     return getClaims(this.url, address);
   }
+
   public getMaxClaimAmount(address: string): Promise<u.Fixed8> {
     return getMaxClaimAmount(this.url, address);
   }
+
   public getHeight(): Promise<number> {
     return getHeight(this.url);
   }
+
   public getTransactionHistory(address: string): Promise<PastTransaction[]> {
     return getTransactionHistory(this.url, address);
   }
+
   public getAddressAbstracts(
     address: string,
     page: number
-  ): Promise<AddressAbstract> {
+  ): Promise<AddressAbstracts> {
     return getAddressAbstracts(this.url, address, page);
   }
 }

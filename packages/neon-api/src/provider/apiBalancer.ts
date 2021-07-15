@@ -1,5 +1,5 @@
 import { logging, u, wallet } from "@cityofzion/neon-core";
-import { AddressAbstract, PastTransaction, Provider } from "./common";
+import { PastTransaction, Provider } from "./common";
 const log = logging.default("api");
 
 export default class ApiBalancer implements Provider {
@@ -11,9 +11,11 @@ export default class ApiBalancer implements Provider {
   }
 
   private _preference = 0;
+
   public get preference(): number {
     return this._preference;
   }
+
   public set preference(val: number) {
     const newVal = Math.max(0, Math.min(1, val));
     if (newVal !== this._preference) {
@@ -23,9 +25,11 @@ export default class ApiBalancer implements Provider {
   }
 
   private _frozen = false;
+
   public get frozen(): boolean {
     return this._frozen;
   }
+
   public set frozen(val: boolean) {
     if (this._frozen !== val) {
       val

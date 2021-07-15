@@ -1,5 +1,6 @@
 import { NeoCliBalance, NeoCliClaimable } from "../neoCli/responses";
-import { AddressAbstract, Entry } from "../common";
+import { AddressAbstracts } from "./interface";
+
 export interface DoraGetBalanceResponse {
   balance: NeoCliBalance[];
   address: string;
@@ -17,9 +18,4 @@ export interface DoraGetClaimableResponse {
   unclaimed: number;
 }
 
-export type TEntry = Omit<Entry, "amount"> & { amount: number };
-
-export interface DoraAddressAbstracts
-  extends Omit<AddressAbstract, "entries"> {
-  entries: TEntry[];
-}
+export type DoraGetAddressAbstractsResponse = AddressAbstracts;
